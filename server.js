@@ -11,7 +11,8 @@ mongoose.connect(urlDB, {useNewUrlParser: true, useUnifiedTopology: true});
 port = process.env.PORT || 8888;
 
 var User = mongoose.model('User', new mongoose.Schema({username: 'string', password: 'string' }));
-
+var Spells = mongoose.model('magia_spells', new mongoose.Schema({nombre: 'string', }));
+var Pnjspells = mongoose.model('magia_spells', new mongoose.Schema({idusuario: 'string', idpj : 'string'}));
 
 app.post('/newUser', function(req, res) {
 
@@ -45,6 +46,25 @@ app.get('/login', function(req, res) {
 
   });
 });
+
+app.get('/all_spells', function(req, res) {
+
+  console.log('All spells')
+    
+  Spells.find({}, function(err, spells) {
+    return res.send(spells);  
+  });
+});
+
+app.get('/player_spells', function(req, res) {
+
+  console.log('Player spells')
+    
+  Spells.find({'userid': req.query.userid},{'pnjid': req.query.pnjid}, function(err, spells) {
+    return res.send(spells);  
+  });
+});
+
 
 app.use(function(req, res) {
     res.status(404).send({url: req.originalUrl + ' not found'})

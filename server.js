@@ -1,30 +1,26 @@
 var express = require('express');
 var fs = require('fs');
+const mongoose = require('mongoose');
+
+const urlDB = process.env.DB || 'mongodb+srv://ubersaw:ubersaw123@cluster-naoru.mongodb.net/test?retryWrites=true&w=majority';
 app = express();
 port = process.env.PORT || 8888;
 
-app.get('/magia', function(req, res) {
-  console.log('Magia')
-  fs.readFile('data/magia.json', 'utf-8', function(err, data) {
+app.get('/login', function(req, res) {
+  
+  console.log('Login')
+  // console.log(req);
+  console.log(urlDB);
+  mongoose.connect(urlDB, {useNewUrlParser: true, useUnifiedTopology: true}, function(error) {
+    // if error is truthy, the initial connection failed.
+    
+  })
 
-    res.send(data);
-  });
-});
-
-app.get('/ki', function(req, res) {
-  console.log('Ki')
-  fs.readFile('data/ki.json', 'utf-8', function(err, data) {
-
-    res.send(data);
-    console.log(data);
-  });
-});
-
-app.get('/mentalismo', function(req, res) {
-  console.log('Mentalismo')
-  fs.readFile('data/mentalismo.json', 'utf-8', function(err, data) {
-
-    res.send(data);
+  var db = mongoose.connection;
+  db.on('error', console.error.bind(console, 'connection error:'));
+  db.once('open', function() {
+    // we're connected!
+    console.log('connected');
   });
 });
 

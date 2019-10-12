@@ -12,7 +12,7 @@ port = process.env.PORT || 8888;
 
 var User = mongoose.model('User', new mongoose.Schema({username: 'string', password: 'string' }));
 var Spells = mongoose.model('magia_spells', new mongoose.Schema({nombre: 'string', }));
-var Pnjspells = mongoose.model('magia_spells', new mongoose.Schema({idusuario: 'string', idpj : 'string'}));
+//var Pnjspells = mongoose.model('magia_spells', new mongoose.Schema({idusuario: 'string', idpj : 'string'}));
 
 app.post('/newUser', function(req, res) {
 
@@ -22,6 +22,7 @@ app.post('/newUser', function(req, res) {
       var newUser = new User({username: req.query.username, password: hash });
       newUser.save(function (err2) {
         if (err2) throw err2;
+        return res.send();
       });
     });
   
@@ -60,8 +61,8 @@ app.get('/player_spells', function(req, res) {
 
   console.log('Player spells')
     
-  Spells.find({'userid': req.query.userid},{'pnjid': req.query.pnjid}, function(err, spells) {
-    return res.send(spells);  
+  Pnjspells.find({'userid': req.query.userid},{'pnjid': req.query.pnjid}, function(err, pnjspells) {
+    return res.send(pnjspells);  
   });
 });
 

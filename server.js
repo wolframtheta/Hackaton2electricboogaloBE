@@ -32,10 +32,10 @@ app.post('/newUser', function(req, res) {
 
 app.get('/personaje', function(req, res) {
 
-  console.log('Players of user')
+  console.log('Players of user ' + req.query.idusuario)
     
-  Characters.find({'userid': req.query.userid},function(err, personajes) {
-    return res.send(personajes);  
+  Characters.find({'idusuario': req.query.idusuario},function(err, characters) {
+    return res.send(characters);  
   });
 });
 

@@ -61,11 +61,11 @@ app.get('/login', function(req, res) {
 
 app.get('/all_spells', function(req, res) {
 
-  console.log('All spells')
-    
-  Spells.find({}, function(err, spells) {
+  console.log('All spells from ' + req.query.via);
+   
+  Spells.find({via: req.query.via}, function(err, spells) {
     return res.send(spells);  
-  });
+  }).sort({nivel: 'asc'});
 });
 
 app.get('/player_spells', function(req, res) {

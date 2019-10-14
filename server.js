@@ -13,7 +13,7 @@ port = process.env.PORT || 8888;
 var User = mongoose.model('User', new mongoose.Schema({username: 'string', password: 'string' }));
 var Spells = mongoose.model('magia_spells', new mongoose.Schema({nombre: 'string', }));
 //var Pnjspells = mongoose.model('magia_spells', new mongoose.Schema({idusuario: 'integer', idpj : 'string'}));
-var Characters = mongoose.model('character',new mongoose.Schema({idusuario: 'string',}));
+var Characters = mongoose.model('characters',new mongoose.Schema({nombre: 'string',}));
 
 
 app.post('/newUser', function(req, res) {
@@ -34,8 +34,8 @@ app.get('/personaje', function(req, res) {
 
   console.log('Players of user')
     
-  Characters.find({'userid': req.query.userid},function(err, personajes) {
-    return res.send(personajes);  
+  Characters.find({'nombre': req.query.nombre},function(err, characters) {
+    return res.send(characters);  
   });
 });
 

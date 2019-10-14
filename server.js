@@ -32,9 +32,10 @@ app.post('/newUser', function(req, res) {
 
 app.get('/personaje', function(req, res) {
 
-  console.log('Players of user')
+  console.log('Players of user ' + req.query.idusuario)
     
-  Characters.find({'nombre': req.query.nombre},function(err, characters) {
+  Characters.find({'idusuario': req.query.idusuario},function(err, characters) {
+
     return res.send(characters);  
   });
 });
@@ -61,11 +62,11 @@ app.get('/login', function(req, res) {
 
 app.get('/all_spells', function(req, res) {
 
-  console.log('All spells')
-    
-  Spells.find({}, function(err, spells) {
+  console.log('All spells from ' + req.query.via);
+   
+  Spells.find({via: req.query.via}, function(err, spells) {
     return res.send(spells);  
-  });
+  }).sort({nivel: 'asc'});
 });
 
 app.get('/player_spells', function(req, res) {

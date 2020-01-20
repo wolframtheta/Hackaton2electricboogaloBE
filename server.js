@@ -11,9 +11,9 @@ mongoose.connect(urlDB, {useNewUrlParser: true, useUnifiedTopology: true});
 port = process.env.PORT || 8888;
 
 var User = mongoose.model('User', new mongoose.Schema({username: 'string', password: 'string' }));
-var Spells = mongoose.model('magia_spells', new mongoose.Schema({nombre: 'string', }));
+var Spells = mongoose.model('magia_spells', new mongoose.Schema({nombre: 'string', nivel: 'number'}));
 //var Pnjspells = mongoose.model('magia_spells', new mongoose.Schema({idusuario: 'integer', idpj : 'string'}));
-var Characters = mongoose.model('characters',new mongoose.Schema({nombre: 'string',}));
+var Characters = mongoose.model('characters',new mongoose.Schema({id: 'number',}));
 
 
 app.post('/newUser', function(req, res) {
@@ -30,13 +30,12 @@ app.post('/newUser', function(req, res) {
   
 });
 
-app.get('/personaje', function(req, res) {
+app.get('/characters', function(req, res) {
 
-  console.log('Players of user ' + req.query.idusuario)
+  console.log('Players of user ' + req.query.id)
     
-  Characters.find({'idusuario': req.query.idusuario},function(err, characters) {
-
-    return res.send(characters);  
+  Characters.findOne({'id': req.query.id } ,function(err, character) {
+    return res.send(character);  
   });
 });
 
@@ -60,13 +59,27 @@ app.get('/login', function(req, res) {
   });
 });
 
-app.get('/all_spells', function(req, res) {
-
-  console.log('All spells from ' + req.query.via);
-   
-  Spells.find({via: req.query.via}, function(err, spells) {
-    return res.send(spells);  
-  }).sort({nivel: 'asc'});
+app.get('/spells', async function(req, res) {
+  console.log(req.query)
+  let spells = [];
+  switch (req.query.orderBy) {
+    case 'nombre':
+      spells = await Spells.find({via: req.query.path});
+      spells.sort(function (a, b) {
+        if (req.query.direction === 'asc')
+          return a.nombre.localeCompare(b.nombre);
+        else if (req.query.direction === 'desc')
+          return b.nombre.localeCompare(a.nombre);
+      });
+      break;
+    case 'nivel':
+      spells = await Spells.find({via: req.query.path}).sort({ nivel : req.query.direction });
+      break;
+    default:
+        spells = await Spells.find({via: req.query.path}).sort({ nivel : 'asc'});
+      break;
+  }
+  return res.send(spells);
 });
 
 app.get('/player_spells', function(req, res) {
